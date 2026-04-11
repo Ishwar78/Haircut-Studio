@@ -16,6 +16,7 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminExplore from "./pages/admin/AdminExplore";
 import AdminServices from "./pages/admin/AdminServices";
+import AdminTryNow from "./pages/admin/AdminTryNow";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => (
 <Route path="/admin/dashboard" element={<AdminDashboard />} />
 <Route path="/admin/explore" element={<AdminExplore />} />
 <Route path="/admin/services" element={<AdminServices />} />
+<Route path="/admin/try-now" element={<AdminTryNow />} />
 
         </Routes>
       </BrowserRouter>

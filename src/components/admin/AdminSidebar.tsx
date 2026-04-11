@@ -6,7 +6,7 @@ export default function AdminSidebar() {
   const menu = [
     { name: "Dashboard", path: "/admin/dashboard" },
     { name: "Explore", path: "/admin/explore" },
-    { name: "Try Now", path: "/try" },
+    { name: "Try Now", path: "/admin/try-now" },
     { name: "Services", path: "/admin/services" },
   ];
 

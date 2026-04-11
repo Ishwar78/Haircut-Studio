@@ -11,6 +11,7 @@ import serviceRoutes from "./routes/serviceRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import exploreRoutes from "./routes/exploreRoutes.js";
+import tryNowRoutes from "./routes/tryNowRoutes.js";
 // import serviceRoutes from "./routes/serviceRoutes.js";
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use("/api/services", serviceRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/explore", exploreRoutes);
+app.use("/api/try-now", tryNowRoutes);
 app.use("/api/service", serviceRoutes);
 
 const PORT = process.env.PORT || 5000;

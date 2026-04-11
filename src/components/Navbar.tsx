@@ -58,14 +58,14 @@ const Navbar = () => {
           ))}
         </div>
 
-        <div className="hidden md:flex items-center gap-3">
+        {/* <div className="hidden md:flex items-center gap-3">
           <Button variant="ghost" size="sm" asChild>
             <Link to="/login">Log in</Link>
           </Button>
           <Button variant="hero" size="sm" asChild>
             <Link to="/login">Sign up</Link>
           </Button>
-        </div>
+        </div> */}
 
         {/* Mobile toggle */}
         <button

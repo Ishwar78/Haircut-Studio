@@ -47,4 +47,21 @@ updateService: (id: string, data: any) => apiCall(`/services/${id}`, {
   deleteService: (id: string) => apiCall(`/services/${id}`, {
     method: "DELETE",
   }),
+  // Try Now Config
+  getTryNowColors: () => apiCall("/try-now/colors"),
+  addTryNowColor: (data: any) => apiCall("/try-now/colors", {
+    method: "POST",
+    body: JSON.stringify(data),
+  }),
+  deleteTryNowColor: (id: string) => apiCall(`/try-now/colors/${id}`, {
+    method: "DELETE",
+  }),
+  getTryNowStyles: () => apiCall("/try-now/quick-styles"),
+  addTryNowStyle: (formData: FormData) => apiCall("/try-now/quick-styles", {
+    method: "POST",
+    body: formData,
+  }),
+  deleteTryNowStyle: (id: string) => apiCall(`/try-now/quick-styles/${id}`, {
+    method: "DELETE",
+  }),
 };
