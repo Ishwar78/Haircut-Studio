@@ -19,3 +19,20 @@ export const getAllInquiry = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+// ✅ DELETE INQUIRY
+export const deleteInquiry = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deleted = await Inquiry.findByIdAndDelete(id);
+
+    if (!deleted) {
+      return res.status(404).json({ message: "Inquiry not found" });
+    }
+
+    res.status(200).json({ message: "Inquiry deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

@@ -80,7 +80,12 @@ deleteBeforeAfter: (id: string) => apiCall(`/before-after/${id}`, {
   method: "DELETE",
 }),
 
-
+// ✅ UPDATE EXPLORE
+updateExplore: (id: string, formData: FormData) =>
+  fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api"}/explore/${id}`, {
+    method: "PUT",
+    body: formData,
+  }).then(res => res.json()),
 
 
 };

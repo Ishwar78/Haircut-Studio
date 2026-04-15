@@ -27,9 +27,9 @@ const Footer = () => (
         </div>
 
         {[
-          { title: "Platform", links: [["Explore Styles", "/explore"], ["Try Now", "/try-now"], ["Services", "/services"], ["Pricing", "/services"]] },
-          { title: "Company", links: [["About Us", "/about"], ["Contact", "/contact"], ["Careers", "#"], ["Blog", "#"]] },
-          { title: "Legal", links: [["Privacy Policy", "#"], ["Terms of Service", "#"], ["Cookie Policy", "#"]] },
+          { title: "Platform", links: [["Explore Styles", "/explore"], ["Try Now", "/try-now"], ["Services", "/services"]] },
+          { title: "Company", links: [["About Us", "/about"], ["Contact", "/contact"], ] },
+          { title: "Legal", links: [["Privacy Policy", "/privacy"], ["Terms of Service", "/term"]] },
         ].map((section) => (
           <div key={section.title}>
             <h3 className="font-display font-semibold text-foreground mb-4">{section.title}</h3>

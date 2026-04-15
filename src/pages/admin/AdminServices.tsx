@@ -14,15 +14,12 @@ export default function AdminServices() {
   const [services, setServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   
-  // Form State
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("salon");
 
-
-const [editId, setEditId] = useState<string | null>(null);
-
+  const [editId, setEditId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchServices();
@@ -37,87 +34,57 @@ const [editId, setEditId] = useState<string | null>(null);
     }
   };
 
-//   const handleAdd = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     if (!name || !price) return toast.error("Please fill Name and Price");
+  const handleAdd = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !price) return toast.error("Please fill Name and Price");
 
-//     setLoading(true);
-//     try {
-//       await adminApi.addService({
-//         name,
-//         price,
-//         description,
-//         category,
-//         isActive: true
-//       });
-//       toast.success("Service added successfully!");
-//       setName("");
-//       setPrice("");
-//       setDescription("");
-//       fetchServices();
-//     } catch (error) {
-//       toast.error("Failed to add service");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
+    setLoading(true);
 
+    try {
+      if (editId) {
+        await adminApi.updateService(editId, {
+          name,
+          price,
+          description,
+          category,
+        });
 
-      const handleAdd = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!name || !price) return toast.error("Please fill Name and Price");
+        toast.success("Service updated!");
+        setEditId(null);
 
-  setLoading(true);
+      } else {
+        await adminApi.addService({
+          name,
+          price,
+          description,
+          category,
+          isActive: true
+        });
 
-  try {
-    if (editId) {
-      // 🔥 UPDATE MODE
-      await adminApi.updateService(editId, {
-        name,
-        price,
-        description,
-        category,
-      });
+        toast.success("Service added successfully!");
+      }
 
-      toast.success("Service updated!");
-      setEditId(null);
+      setName("");
+      setPrice("");
+      setDescription("");
 
-    } else {
-      // ➕ ADD MODE
-      await adminApi.addService({
-        name,
-        price,
-        description,
-        category,
-        isActive: true
-      });
+      fetchServices();
 
-      toast.success("Service added successfully!");
+    } catch (error) {
+      toast.error("Operation failed");
+    } finally {
+      setLoading(false);
     }
-
-    // RESET FORM
-    setName("");
-    setPrice("");
-    setDescription("");
-
-    fetchServices();
-
-  } catch (error) {
-    toast.error("Operation failed");
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   const handleEdit = (service: any) => {
-  setEditId(service._id);
+    setEditId(service._id);
 
-  setName(service.name);
-  setPrice(service.price);
-  setDescription(service.description);
-  setCategory(service.category);
-};
+    setName(service.name);
+    setPrice(service.price);
+    setDescription(service.description);
+    setCategory(service.category);
+  };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this service?")) return;
@@ -130,30 +97,34 @@ const [editId, setEditId] = useState<string | null>(null);
     }
   };
 
-
-
   return (
-    <div className="flex bg-black min-h-screen">
+    <div className="flex min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white">
+      
       <AdminSidebar />
 
-      <div className="flex-1 p-8 text-white">
+      <div className="flex-1 p-4 sm:p-6 lg:p-8">
+
+        {/* HEADER */}
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-display font-bold">Manage <span className="gradient-text">Services & Plans</span></h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">
+            Manage <span className="text-purple-400">Services & Plans</span>
+          </h1>
         </div>
 
-        {/* Add Section */}
-        <div className="glass-strong p-6 rounded-2xl mb-12 border border-white/10">
-          <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
+        {/* ADD SECTION */}
+        <div className="bg-white/10 backdrop-blur-xl p-5 sm:p-6 rounded-2xl mb-10 border border-white/10 shadow-lg">
+          
+          <h2 className="text-lg font-semibold mb-6 flex items-center gap-2">
             <Plus className="w-5 h-5 text-purple-400" /> Add New Service/Plan
           </h2>
           
           <form onSubmit={handleAdd} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
             <div className="flex flex-col gap-2">
-              <label className="text-sm text-gray-400">Name / Title</label>
+              <label className="text-sm text-gray-300">Name / Title</label>
               <input
                 type="text"
-                placeholder="e.g. Haircut & Styling"
-                className="bg-zinc-900 border border-white/10 p-3 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none w-full"
+                className="bg-black/30 border border-white/10 p-3 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -161,11 +132,10 @@ const [editId, setEditId] = useState<string | null>(null);
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-sm text-gray-400">Price (e.g. 45 or $29/mo)</label>
+              <label className="text-sm text-gray-300">Price</label>
               <input
                 type="text"
-                placeholder="e.g. 45"
-                className="bg-zinc-900 border border-white/10 p-3 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none w-full"
+                className="bg-black/30 border border-white/10 p-3 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 required
@@ -173,92 +143,108 @@ const [editId, setEditId] = useState<string | null>(null);
             </div>
             
             <div className="flex flex-col gap-2">
-              <label className="text-sm text-gray-400">Category</label>
+              <label className="text-sm text-gray-300">Category</label>
               <select 
-                className="bg-zinc-900 border border-white/10 p-3 rounded-xl outline-none"
+                className="bg-black/30 border border-white/10 p-3 rounded-xl outline-none"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
               >
-                {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+                {CATEGORIES.map(c => (
+                  <option key={c.value} value={c.value}>{c.label}</option>
+                ))}
               </select>
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-sm text-gray-400">Description / Features (Comma separated)</label>
+              <label className="text-sm text-gray-300">Description</label>
               <input
                 type="text"
-                placeholder="e.g. Precision cuts, expert styling"
-                className="bg-zinc-900 border border-white/10 p-3 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none w-full"
+                className="bg-black/30 border border-white/10 p-3 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
 
-            <Button type="submit" className="bg-purple-600 hover:bg-purple-700 h-12 md:col-span-2 mt-2" disabled={loading}>
-            {loading 
-  ? "Saving..." 
-  : editId 
-    ? "Update Service" 
-    : "Add Service"
-}
+            <Button
+              type="submit"
+              className="bg-gradient-to-r from-purple-600 to-pink-500 hover:scale-105 transition h-12 md:col-span-2 mt-2"
+              disabled={loading}
+            >
+              {loading 
+                ? "Saving..." 
+                : editId 
+                  ? "Update Service" 
+                  : "Add Service"
+              }
             </Button>
           </form>
         </div>
 
-        {/* List Section */}
-        <div className="glass-strong rounded-2xl overflow-hidden border border-white/10">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-zinc-900/50 text-gray-400 text-sm">
+        {/* LIST SECTION */}
+        <div className="bg-white/10 backdrop-blur-xl rounded-2xl overflow-hidden border border-white/10 shadow-lg">
+
+          <table className="w-full text-left border-collapse hidden md:table">
+            <thead className="bg-white/10 text-gray-300 text-sm">
               <tr>
-                <th className="p-4 font-medium">Type</th>
-                <th className="p-4 font-medium">Name</th>
-                <th className="p-4 font-medium">Price</th>
-                <th className="p-4 font-medium">Description</th>
-                <th className="p-4 font-medium text-right">Actions</th>
+                <th className="p-4">Type</th>
+                <th className="p-4">Name</th>
+                <th className="p-4">Price</th>
+                <th className="p-4">Description</th>
+                <th className="p-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+
+            <tbody>
               {services.map((s) => (
-                <tr key={s._id} className="hover:bg-white/[0.02] transition-colors group">
-                  <td className="p-4 capitalize text-sm">
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${s.category === "salon" ? "bg-blue-500/10 text-blue-400 border border-blue-500/20" : "bg-gold-500/10 text-yellow-400 border border-yellow-500/20"}`}>
+                <tr key={s._id} className="border-t border-white/10 hover:bg-white/5">
+                  
+                  <td className="p-4">
+                    <span className="px-2 py-1 rounded bg-purple-500/20 text-purple-300 text-xs">
                       {s.category}
                     </span>
                   </td>
-                  <td className="p-4 font-semibold text-purple-400">{s.name}</td>
-                  <td className="p-4 text-sm font-bold text-white">{s.price}</td>
-                  <td className="p-4 text-sm text-gray-400 max-w-xs truncate">{s.description}</td>
 
+                  <td className="p-4 text-purple-400 font-semibold">{s.name}</td>
+                  <td className="p-4 font-bold">{s.price}</td>
+                  <td className="p-4 text-gray-300 max-w-xs truncate">{s.description}</td>
 
                   <td className="p-4 text-right">
-<button 
-  onClick={() => handleEdit(s)}
-  className="text-gray-500 hover:text-blue-500 p-2 rounded-lg transition-colors"
->
-  ✏️
-</button>
-
-                    <button 
-                      onClick={() => handleDelete(s._id)}
-                      className="text-gray-500 hover:text-red-500 p-2 rounded-lg transition-colors"
-                    >
-                      <Trash2 className="w-5 h-5" />
+                    <button onClick={() => handleEdit(s)} className="mr-2 hover:text-blue-400">✏️</button>
+                    <button onClick={() => handleDelete(s._id)} className="hover:text-red-400">
+                      <Trash2 />
                     </button>
-
-
                   </td>
+
                 </tr>
               ))}
-              {services.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="p-12 text-center text-gray-500">
-                    No services added yet.
-                  </td>
-                </tr>
-              )}
             </tbody>
           </table>
+
+          {/* MOBILE VIEW */}
+          <div className="md:hidden p-4 space-y-4">
+            {services.map((s) => (
+              <div key={s._id} className="bg-black/30 p-4 rounded-xl border border-white/10">
+                <div className="text-purple-400 font-bold">{s.name}</div>
+                <div className="text-sm text-gray-300">{s.price}</div>
+                <div className="text-xs text-gray-400">{s.description}</div>
+
+                <div className="flex justify-between mt-3">
+                  <button onClick={() => handleEdit(s)}>✏️</button>
+                  <button onClick={() => handleDelete(s._id)}>
+                    <Trash2 />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {services.length === 0 && (
+            <div className="p-10 text-center text-gray-400">
+              No services added yet.
+            </div>
+          )}
         </div>
+
       </div>
     </div>
   );

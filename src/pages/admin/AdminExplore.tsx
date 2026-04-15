@@ -1,3 +1,4 @@
+// 🔥 SAME IMPORTS (unchanged)
 import { useState, useEffect } from "react";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import { adminApi } from "../../api/api";
@@ -20,7 +21,7 @@ export default function AdminExplore() {
   const [tag, setTag] = useState("Trending");
   const [file, setFile] = useState<File | null>(null);
   const [uploadPreview, setUploadPreview] = useState<string | null>(null);
-
+const [editId, setEditId] = useState<string | null>(null);
   useEffect(() => {
     fetchStyles();
   }, []);
@@ -82,35 +83,81 @@ export default function AdminExplore() {
     }
   };
 
+  const handleEdit = (style: any) => {
+  setEditId(style._id);
+  setName(style.name);
+  setCategory(style.category);
+  setLength(style.length);
+  setTag(style.tag);
+  setUploadPreview(getImageUrl(style.img));
+};
+
+const handleUpdate = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("category", category);
+  formData.append("length", length);
+  formData.append("tag", tag);
+
+  if (file) {
+    formData.append("image", file);
+  }
+
+  try {
+    await adminApi.updateExplore(editId, formData);
+
+    toast.success("Style updated!");
+
+    // reset form
+    setEditId(null);
+    setName("");
+    setFile(null);
+    setUploadPreview(null);
+
+    fetchStyles();
+  } catch (error) {
+    toast.error("Update failed");
+  }
+};
+
   const getImageUrl = (path: string) => {
     const base = import.meta.env.VITE_API_BASE_URL?.replace("/api", "") || "http://localhost:5000";
     return `${base}${path}`;
   };
 
   return (
-    <div className="flex bg-black min-h-screen">
+    <div className="flex min-h-screen bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] text-white">
+
+      {/* Sidebar */}
       <AdminSidebar />
 
-      <div className="flex-1 p-8 text-white">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-display font-bold">Manage <span className="gradient-text">Explore Gallery</span></h1>
+      <div className="flex-1 p-4 sm:p-6 lg:p-8">
+
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold">
+            Manage <span className="text-purple-400">Explore Gallery</span>
+          </h1>
         </div>
 
         {/* Upload Section */}
-        <div className="glass-strong p-6 rounded-2xl mb-12 border border-white/10">
-          <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
-            <Plus className="w-5 h-5 text-purple-400" /> Add New Style
+        <div className="bg-white/10 backdrop-blur-xl border border-white/10 p-4 sm:p-6 rounded-2xl mb-8 shadow-lg">
+          <h2 className="text-lg font-semibold mb-6 flex items-center gap-2">
+            <Plus className="text-purple-400" /> Add New Style
           </h2>
           
           <div className="flex flex-col lg:flex-row gap-8">
+
             {/* Form */}
-            <form onSubmit={handleUpload} className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={editId ? handleUpdate : handleUpload}className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+
               <div className="flex flex-col gap-2 md:col-span-2">
-                <label className="text-sm text-gray-400">Style Name</label>
+                <label className="text-sm text-gray-300">Style Name</label>
                 <input
                   type="text"
-                  placeholder="e.g. Modern Fade"
-                  className="bg-zinc-900 border border-white/10 p-3 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none w-full"
+                  className="bg-black/30 border border-white/10 p-3 rounded-xl focus:ring-2 focus:ring-purple-500 outline-none"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -118,63 +165,59 @@ export default function AdminExplore() {
               </div>
               
               <div className="flex flex-col gap-2">
-                <label className="text-sm text-gray-400">Category</label>
+                <label className="text-sm text-gray-300">Category</label>
                 <select 
-                  className="bg-zinc-900 border border-white/10 p-3 rounded-xl outline-none"
+                  className="bg-black/30 border border-white/10 p-3 rounded-xl"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
                 >
-                  {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                  {CATEGORIES.map(c => <option key={c}>{c}</option>)}
                 </select>
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-sm text-gray-400">Hair Length</label>
+                <label className="text-sm text-gray-300">Hair Length</label>
                 <select 
-                  className="bg-zinc-900 border border-white/10 p-3 rounded-xl outline-none"
+                  className="bg-black/30 border border-white/10 p-3 rounded-xl"
                   value={length}
                   onChange={(e) => setLength(e.target.value)}
                 >
-                  {LENGTHS.map(l => <option key={l} value={l}>{l}</option>)}
+                  {LENGTHS.map(l => <option key={l}>{l}</option>)}
                 </select>
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-sm text-gray-400">Tag/Type</label>
+                <label className="text-sm text-gray-300">Tag</label>
                 <select 
-                  className="bg-zinc-900 border border-white/10 p-3 rounded-xl outline-none"
+                  className="bg-black/30 border border-white/10 p-3 rounded-xl"
                   value={tag}
                   onChange={(e) => setTag(e.target.value)}
                 >
-                  {TAGS.map(t => <option key={t} value={t}>{t}</option>)}
+                  {TAGS.map(t => <option key={t}>{t}</option>)}
                 </select>
               </div>
 
               <div className="flex flex-col gap-2 md:col-span-2">
-                <label className="text-sm text-gray-400">Upload Image</label>
-                <label className="flex items-center gap-3 bg-zinc-900 border border-dashed border-white/20 p-4 rounded-xl cursor-pointer hover:bg-zinc-800 transition-colors">
-                  <ImageIcon className="w-5 h-5 text-gray-400" />
-                  <span className="text-gray-400">{file ? file.name : "Choose an image..."}</span>
-                  <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+                <label className="text-sm text-gray-300">Upload Image</label>
+                <label className="flex items-center gap-3 bg-black/30 border border-dashed border-white/20 p-4 rounded-xl cursor-pointer hover:bg-black/40 transition">
+                  <ImageIcon />
+                  {file ? file.name : "Choose image"}
+                  <input type="file" hidden onChange={handleFileChange} />
                 </label>
               </div>
 
-              <Button type="submit" className="bg-purple-600 hover:bg-purple-700 h-12 md:col-span-2 mt-2" disabled={loading}>
+              <Button className="md:col-span-2 bg-purple-600 hover:bg-purple-700 h-12">
                 {loading ? "Uploading..." : "Publish Style"}
               </Button>
             </form>
 
-            {/* Preview Section */}
+            {/* Preview */}
             <div className="w-full lg:w-64">
-              <p className="text-sm text-gray-400 mb-2">Upload Preview</p>
-              <div className="aspect-[4/5] bg-zinc-900 rounded-2xl border border-white/10 flex items-center justify-center overflow-hidden">
+              <div className="aspect-[4/5] bg-black/30 rounded-xl flex items-center justify-center overflow-hidden">
                 {uploadPreview ? (
-                  <img src={uploadPreview} className="w-full h-full object-cover" alt="Preview" />
+                  <img src={uploadPreview} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="text-center p-4">
-                    <ImageIcon className="w-10 h-10 text-gray-700 mx-auto mb-2" />
-                    <p className="text-xs text-gray-600">No image selected</p>
-                  </div>
+                  <ImageIcon className="text-gray-500" />
                 )}
               </div>
             </div>
@@ -182,59 +225,47 @@ export default function AdminExplore() {
         </div>
 
         {/* List Section */}
-        <div className="glass-strong rounded-2xl overflow-hidden border border-white/10">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-zinc-900/50 text-gray-400 text-sm">
-              <tr>
-                <th className="p-4 font-medium">Preview</th>
-                <th className="p-4 font-medium">Style Name</th>
-                <th className="p-4 font-medium">Details</th>
-                <th className="p-4 font-medium text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {styles.map((style) => (
-                <tr key={style._id} className="hover:bg-white/[0.02] transition-colors group">
-                  <td className="p-4">
-                    <div className="w-16 h-20 rounded-lg overflow-hidden border border-white/10">
-                      <img 
-                        src={getImageUrl(style.img)} 
-                        className="w-full h-full object-cover"
-                        alt={style.name}
-                      />
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <p className="font-semibold text-purple-400">{style.name}</p>
-                    <span className="text-xs px-2 py-0.5 bg-purple-500/10 text-purple-400 rounded-full border border-purple-500/20 mt-1 inline-block">
-                      {style.tag}
-                    </span>
-                  </td>
-                  <td className="p-4 text-sm text-gray-400">
-                    <div className="flex flex-col">
-                      <span>Category: {style.category}</span>
-                      <span>Length: {style.length}</span>
-                    </div>
-                  </td>
-                  <td className="p-4 text-right">
-                    <button 
-                      onClick={() => handleDelete(style._id)}
-                      className="text-gray-500 hover:text-red-500 p-2 rounded-lg transition-colors"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {styles.length === 0 && (
-                <tr>
-                  <td colSpan={4} className="p-12 text-center text-gray-500">
-                    No styles uploaded yet.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+        <div className="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden">
+
+          <div className="hidden md:grid grid-cols-4 p-4 text-gray-400 text-sm">
+            <span>Preview</span>
+            <span>Name</span>
+            <span>Details</span>
+            <span className="text-right">Actions</span>
+          </div>
+
+          {styles.map((style) => (
+            <div key={style._id} className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border-t border-white/10 items-center">
+
+              <img src={getImageUrl(style.img)} className="w-full md:w-20 h-24 object-cover rounded-lg" />
+
+              <div>
+                <p className="text-purple-400 font-semibold">{style.name}</p>
+                <span className="text-xs">{style.tag}</span>
+              </div>
+
+              <div className="text-sm text-gray-300">
+                {style.category} • {style.length}
+              </div>
+
+             <div className="text-right flex gap-3 justify-end">
+                {/* EDIT */}
+<button
+  onClick={() => handleEdit(style)}
+  className="text-blue-400 hover:text-blue-500"
+>
+  ✏️
+</button>
+
+{/* DELETE */}
+<button onClick={() => handleDelete(style._id)}>
+  <Trash2 className="hover:text-red-500" />
+</button>
+              </div>
+
+            </div>
+          ))}
+
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-
+import { Calendar } from "lucide-react";
 export default function AdminSidebar() {
   const location = useLocation();
 
@@ -9,7 +9,8 @@ export default function AdminSidebar() {
     { name: "Try Now", path: "/admin/try-now" },
     { name: "Services", path: "/admin/services" },
      {name: "beforeAfter", path: "/admin/before-after"}, 
-     {name: "contact" , path: "/admin/contact"}
+     {name: "contact" , path: "/admin/contact"},
+ { name: "Bookings", path: "/admin/bookings", icon: Calendar },
   ];
 
   return (

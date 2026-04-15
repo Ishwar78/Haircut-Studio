@@ -39,13 +39,13 @@ export const addExploreStyle = async (req, res) => {
   }
 };
 
+// ✅ DELETE
 export const deleteExploreStyle = async (req, res) => {
   const { id } = req.params;
   try {
     const style = await Explore.findById(id);
     if (!style) return res.status(404).json({ message: "Style not found" });
 
-    // Delete image file
     const imagePath = path.join(path.resolve(), style.img);
     if (fs.existsSync(imagePath)) {
       fs.unlinkSync(imagePath);
@@ -55,5 +55,34 @@ export const deleteExploreStyle = async (req, res) => {
     res.json({ message: "Style deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
+  }
+}; // ✅ YE CLOSE KARNA THA
+
+// ✅ UPDATE
+export const updateExploreStyle = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const style = await Explore.findById(id);
+    if (!style) return res.status(404).json({ message: "Style not found" });
+
+    if (req.file) {
+      const oldPath = path.join(path.resolve(), style.img);
+      if (fs.existsSync(oldPath)) {
+        fs.unlinkSync(oldPath);
+      }
+      style.img = `/uploads/${req.file.filename}`;
+    }
+
+    style.name = req.body.name;
+    style.category = req.body.category;
+    style.length = req.body.length;
+    style.tag = req.body.tag;
+
+    await style.save();
+
+    res.json(style);
+  } catch (error) {
+    res.status(500).json({ message: "Update error", error: error.message });
   }
 };
