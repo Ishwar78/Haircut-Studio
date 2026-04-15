@@ -71,10 +71,10 @@ getBeforeAfter: () => apiCall("/before-after"),
 
 getAllBeforeAfter: () => apiCall("/before-after/admin"),
 
-addBeforeAfter: (data: any) => apiCall("/before-after", {
+addBeforeAfter: (formData: FormData) => fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api"}/before-after`, {
   method: "POST",
-  body: JSON.stringify(data),
-}),
+  body: formData,
+}).then(res => res.json()),
 
 deleteBeforeAfter: (id: string) => apiCall(`/before-after/${id}`, {
   method: "DELETE",

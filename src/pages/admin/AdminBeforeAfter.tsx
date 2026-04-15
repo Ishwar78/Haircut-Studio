@@ -166,12 +166,12 @@ export default function AdminBeforeAfter() {
                 <div className="flex gap-2">
 
                   <img
-                    src={`http://localhost:5000/${item.beforeImage}`}
+                   src={`http://localhost:5000/${item.beforeImage?.replace(/^\/+/, "")}`}
                     className="h-[100px] w-[150px] object-cover rounded-lg"
                   />
 
                   <img
-                    src={`http://localhost:5000/${item.afterImage}`}
+                src={`http://localhost:5000/${item.beforeImage?.replace(/^\/+/, "")}`}
                     className="h-[100px] w-[150px] object-cover rounded-lg"
                   />
                 </div>

@@ -144,35 +144,39 @@ return (
   <div className="relative">
 
     <BeforeAfterSlider
-      beforeImage={`http://localhost:5000/${current.beforeImage}`}
-      afterImage={`http://localhost:5000/${current.afterImage}`}
+      // beforeImage={`http://localhost:5000/${current.beforeImage}`}
+      // afterImage={`http://localhost:5000/${current.afterImage}`}
+      beforeImage={`http://localhost:5000/${current.beforeImage?.replace(/^\/+/, "")}`}
+afterImage={`http://localhost:5000/${current.afterImage?.replace(/^\/+/, "")}`}
       beforeLabel="Before"
       afterLabel="After"
     />
 
-    {/* LEFT */}
-    <button
-      onClick={() =>
-        setIndex((prev) =>
-          prev === 0 ? baList.length - 1 : prev - 1
-        )
-      }
-      className="absolute left-2 top-1/2 bg-black/60 px-3 py-2 rounded"
-    >
-      ◀
-    </button>
+    {baList.length > 1 && (
+      <>
+        {/* LEFT */}
+        <button
+         onClick={() => {
+  if (baList.length === 0) return;
+  setIndex((prev) => (prev - 1 + baList.length) % baList.length);
+}}
+          className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 text-white px-4 py-2 rounded-full z-10 hover:bg-black/80 transition"
+        >
+          ◀
+        </button>
 
-    {/* RIGHT */}
-    <button
-      onClick={() =>
-        setIndex((prev) =>
-          prev === baList.length - 1 ? 0 : prev + 1
-        )
-      }
-      className="absolute right-2 top-1/2 bg-black/60 px-3 py-2 rounded"
-    >
-      ▶
-    </button>
+        {/* RIGHT */}
+        <button
+          onClick={() => {
+  if (baList.length === 0) return;
+  setIndex((prev) => (prev + 1) % baList.length);
+}}
+          className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 text-white px-4 py-2 rounded-full z-10 hover:bg-black/80 transition"
+        >
+          ▶
+        </button>
+      </>
+    )}
 
   </div>
 )}

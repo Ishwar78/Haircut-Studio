@@ -3,7 +3,8 @@ import {
   createBeforeAfter,
   getBeforeAfter,
   getAllBeforeAfter,
-  deleteBeforeAfter
+  deleteBeforeAfter,
+  upload
 } from "../controllers/beforeAfterController.js";
 
 const router = express.Router();
@@ -15,7 +16,7 @@ router.get("/", getBeforeAfter);
 router.get("/admin", getAllBeforeAfter);
 
 // CREATE
-router.post("/", createBeforeAfter);
+router.post("/", upload.fields([{ name: 'beforeImage', maxCount: 1 }, { name: 'afterImage', maxCount: 1 }]), createBeforeAfter);
 
 // DELETE
 router.delete("/:id", deleteBeforeAfter);
