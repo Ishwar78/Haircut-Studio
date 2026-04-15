@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+
 import { Upload, Sparkles, Download, Camera, Palette, Wand2, Star, ArrowRight, ChevronRight, Zap, Shield, Clock } from "lucide-react";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
@@ -6,6 +7,11 @@ import GlassCard from "@/components/GlassCard";
 import Section from "@/components/Section";
 import AnimateOnScroll from "@/components/AnimateOnScroll";
 import BeforeAfterSlider from "@/components/BeforeAfterSlider";
+
+
+import { useEffect, useState } from "react";
+import { adminApi } from "@/api/api";
+
 
 const trendingStyles = [
   { name: "Modern Fade", category: "Men", img: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&h=500&fit=crop" },
@@ -31,7 +37,25 @@ const features = [
   { icon: Clock, title: "Save Time", desc: "No more bad haircuts. Preview and decide before your appointment.", glow: "secondary" as const },
 ];
 
-const Home = () => (
+
+
+const Home = () => {
+const [baList, setBaList] = useState<any[]>([]);
+const [index, setIndex] = useState(0);
+
+useEffect(() => {
+  adminApi.getBeforeAfter().then((data: any) => {
+    if (Array.isArray(data)) {
+      setBaList(data);
+    } else if (data) {
+      setBaList([data]);
+    }
+  });
+}, []);
+
+const current = baList[index];
+
+return (
   <Layout>
     {/* Hero */}
     <section className="relative min-h-[90vh] flex items-center overflow-hidden">
@@ -116,14 +140,42 @@ const Home = () => (
 
     {/* Before/After */}
     <Section label="Results" title="See the Transformation" subtitle="Drag the slider to compare before and after styling.">
-      <AnimateOnScroll animation="scale" className="max-w-4xl mx-auto">
-        <BeforeAfterSlider
-          beforeImage="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=900&h=600&fit=crop"
-          afterImage="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=900&h=600&fit=crop"
-          beforeLabel="Before"
-          afterLabel="After"
-        />
-      </AnimateOnScroll>
+      {current && (
+  <div className="relative">
+
+    <BeforeAfterSlider
+      beforeImage={`http://localhost:5000/${current.beforeImage}`}
+      afterImage={`http://localhost:5000/${current.afterImage}`}
+      beforeLabel="Before"
+      afterLabel="After"
+    />
+
+    {/* LEFT */}
+    <button
+      onClick={() =>
+        setIndex((prev) =>
+          prev === 0 ? baList.length - 1 : prev - 1
+        )
+      }
+      className="absolute left-2 top-1/2 bg-black/60 px-3 py-2 rounded"
+    >
+      ◀
+    </button>
+
+    {/* RIGHT */}
+    <button
+      onClick={() =>
+        setIndex((prev) =>
+          prev === baList.length - 1 ? 0 : prev + 1
+        )
+      }
+      className="absolute right-2 top-1/2 bg-black/60 px-3 py-2 rounded"
+    >
+      ▶
+    </button>
+
+  </div>
+)}
     </Section>
 
     {/* Trending */}
@@ -185,6 +237,8 @@ const Home = () => (
       </div>
     </section>
   </Layout>
+  
 );
+};
 
 export default Home;

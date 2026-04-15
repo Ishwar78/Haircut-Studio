@@ -64,4 +64,23 @@ updateService: (id: string, data: any) => apiCall(`/services/${id}`, {
   deleteTryNowStyle: (id: string) => apiCall(`/try-now/quick-styles/${id}`, {
     method: "DELETE",
   }),
+
+
+// BEFORE AFTER
+getBeforeAfter: () => apiCall("/before-after"),
+
+getAllBeforeAfter: () => apiCall("/before-after/admin"),
+
+addBeforeAfter: (data: any) => apiCall("/before-after", {
+  method: "POST",
+  body: JSON.stringify(data),
+}),
+
+deleteBeforeAfter: (id: string) => apiCall(`/before-after/${id}`, {
+  method: "DELETE",
+}),
+
+
+
+
 };
