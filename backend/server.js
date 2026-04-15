@@ -14,6 +14,8 @@ import exploreRoutes from "./routes/exploreRoutes.js";
 import tryNowRoutes from "./routes/tryNowRoutes.js";
 import beforeAfterRoutes from "./routes/beforeAfterRoutes.js"
 // import serviceRoutes from "./routes/serviceRoutes.js";
+
+import inquiryRoutes from "./routes/inquiryRoutes.js";
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -23,6 +25,8 @@ const app = express();
 import fs from "fs";
 
 const uploadsPath = path.join(process.cwd(), "uploads");
+
+// const inquiryRoutes = require("./routes/inquiryRoutes");
 
 if (!fs.existsSync(uploadsPath)) {
   fs.mkdirSync(uploadsPath);
@@ -41,6 +45,7 @@ app.use("/api/explore", exploreRoutes);
 app.use("/api/try-now", tryNowRoutes);
 app.use("/api/service", serviceRoutes);
 app.use("/api/before-after",beforeAfterRoutes)
+app.use("/api/inquiry", inquiryRoutes);
 
 const PORT = process.env.PORT || 5000;
 

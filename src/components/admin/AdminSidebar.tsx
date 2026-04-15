@@ -8,7 +8,8 @@ export default function AdminSidebar() {
     { name: "Explore", path: "/admin/explore" },
     { name: "Try Now", path: "/admin/try-now" },
     { name: "Services", path: "/admin/services" },
-     {name: "beforeAfter", path: "/admin/before-after"} 
+     {name: "beforeAfter", path: "/admin/before-after"}, 
+     {name: "contact" , path: "/admin/contact"}
   ];
 
   return (

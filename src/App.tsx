@@ -18,6 +18,7 @@ import AdminExplore from "./pages/admin/AdminExplore";
 import AdminServices from "./pages/admin/AdminServices";
 import AdminTryNow from "./pages/admin/AdminTryNow";
 import AdminBeforeAfter from "./pages/admin/AdminBeforeAfter";
+import AdminInquiry from "./pages/admin/AdminInquiry";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,7 @@ const App = () => (
 <Route path="/admin/services" element={<AdminServices />} />
 <Route path="/admin/try-now" element={<AdminTryNow />} />
 <Route path="/admin/before-after" element={<AdminBeforeAfter />} />
+<Route path="/admin/contact" element={<AdminInquiry />} />
 
         </Routes>
       </BrowserRouter>

@@ -8,9 +8,29 @@ import { useState } from "react";
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // ✅ UPDATED HANDLE SUBMIT (API CONNECTED)
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setForm({ name: "", email: "", message: "" });
+
+    try {
+      const res = await fetch("http://localhost:5000/api/inquiry/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (res.ok) {
+        alert("Message Sent Successfully ✅");
+        setForm({ name: "", email: "", message: "" });
+      } else {
+        alert("Error sending message ❌");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Server error ❌");
+    }
   };
 
   return (
@@ -22,11 +42,14 @@ const Contact = () => {
               <h1 className="font-display font-bold text-4xl md:text-5xl text-foreground mb-4">
                 Get in <span className="gradient-text">Touch</span>
               </h1>
-              <p className="text-muted-foreground text-lg max-w-xl mx-auto">We'd love to hear from you. Send us a message and we'll respond within 24 hours.</p>
+              <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+                We'd love to hear from you. Send us a message and we'll respond within 24 hours.
+              </p>
             </div>
           </AnimateOnScroll>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            
             {/* Info cards */}
             <AnimateOnScroll animation="slide-left" className="space-y-4">
               {[
@@ -50,6 +73,7 @@ const Contact = () => {
             <GlassCard hover={false} className="lg:col-span-2">
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  
                   <div>
                     <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Name</label>
                     <input
@@ -61,6 +85,7 @@ const Contact = () => {
                       required
                     />
                   </div>
+
                   <div>
                     <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Email</label>
                     <input
@@ -72,7 +97,9 @@ const Contact = () => {
                       required
                     />
                   </div>
+
                 </div>
+
                 <div>
                   <label className="text-xs font-medium text-muted-foreground mb-1.5 block">Message</label>
                   <textarea
@@ -84,9 +111,11 @@ const Contact = () => {
                     required
                   />
                 </div>
+
                 <Button variant="hero" size="lg" type="submit" className="w-full sm:w-auto">
                   <Send className="w-4 h-4" /> Send Message
                 </Button>
+
               </form>
             </GlassCard>
           </div>
